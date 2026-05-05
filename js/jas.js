@@ -53,6 +53,13 @@ function openLightbox(src, type, title) {
     video.src = src; video.controls = true; video.autoplay = true;
     video.style.cssText = 'max-width:100%;max-height:75vh;';
     lightboxBody.appendChild(video);
+  } else if (type === 'youtube') {
+    const iframe = document.createElement('iframe');
+    iframe.src = src;
+    iframe.title = title;
+    iframe.allow = 'autoplay; fullscreen';
+    iframe.allowFullscreen = true;
+    lightboxBody.appendChild(iframe);
   } else {
     const iframe = document.createElement('iframe');
     iframe.src = src; iframe.title = title;
