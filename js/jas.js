@@ -84,11 +84,26 @@ lightboxOverlay.addEventListener('click', closeLightbox);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
 // ===== Contact form =====
-document.getElementById('contactForm').addEventListener('submit', e => {
+document.getElementById('contactForm').addEventListener('submit', async e => {
   e.preventDefault();
   const btn = e.target.querySelector('button[type="submit"]');
-  btn.textContent = 'Sent!'; btn.disabled = true;
-  setTimeout(() => { btn.textContent = 'Send Message'; btn.disabled = false; e.target.reset(); }, 3000);
+  btn.textContent = '發送中…';
+  btn.disabled = true;
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: new FormData(e.target) });
+    const data = await res.json();
+    if (data.success) {
+      btn.textContent = '已發送！';
+      e.target.reset();
+      setTimeout(() => { btn.textContent = '發送訊息'; btn.disabled = false; }, 3000);
+    } else {
+      btn.textContent = '發送失敗，請重試';
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = '發送失敗，請重試';
+    btn.disabled = false;
+  }
 });
 
 // ===== Scroll fade-in =====
